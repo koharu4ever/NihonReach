@@ -1,0 +1,6 @@
+services:
+  app:
+    # Reuse the explicitly built local image when VS Code opens the container.
+    # This prevents Dev Containers from refreshing every base-image tag on each reopen.
+    build: !reset null
+    pull_policy: never

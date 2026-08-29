@@ -1,0 +1,53 @@
+{
+  "name": "NihonReach",
+  "dockerComposeFile": [
+    "../compose.yaml",
+    "compose.devcontainer.yaml"
+  ],
+  "service": "app",
+  "runServices": [
+    "app",
+    "mysql",
+    "mailpit"
+  ],
+  "workspaceFolder": "/workspaces/nihonreach",
+  "remoteUser": "vscode",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
+  "forwardPorts": [
+    8000,
+    5173,
+    "mailpit:8025"
+  ],
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel",
+      "onAutoForward": "notify"
+    },
+    "5173": {
+      "label": "Vite",
+      "onAutoForward": "silent"
+    },
+    "8025": {
+      "label": "Mailpit",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
