@@ -1,6 +1,6 @@
 # NihonReach
 
-NihonReach 是面向求职展示的精密刀具 B2B Portfolio Demo。目前处于 **Phase 0：开发底座**，尚未生成 Laravel 业务代码，也不能作为完成项目写入简历。
+NihonReach 是面向求职展示的精密刀具 B2B Portfolio Demo。目前处于 **Phase 0：工程初始化**，已生成 Laravel 13 官方 Vue Starter Kit，但尚未开发业务功能，也不能作为完成项目写入简历。
 
 ## 开发结构
 
@@ -15,7 +15,7 @@ app（Dev Container）
 ├─ PHP 8.5 / Composer 2
 ├─ Node 24 / npm
 ├─ Git / Codex CLI
-└─ Laravel 与前端工具（下一阶段生成）
+└─ Laravel 13 / Inertia 3 / Vue 3 / TypeScript
       │
       ├─ mysql：MySQL 8.4 LTS
       ├─ mailpit：开发邮件捕获
@@ -33,7 +33,8 @@ MySQL 的 `3306` 和 Mailpit 的 SMTP `1025` 不发布到 Windows。Laravel、Vi
 3. 首次使用且本地镜像不存在时，在仓库根目录执行 `docker compose build app`，显式生成本地 `nihonreach-app:dev` 镜像。
 4. 执行 `Dev Containers: Reopen in Container`。
 5. 等待 MySQL、Mailpit 通过健康检查。
-6. `post-create.sh` 会继续验证 app 工具链以及数据库、邮件服务连通性。
+6. `post-create.sh` 会安装锁定依赖、生成本地 `APP_KEY`，并验证工具链以及数据库、邮件服务连通性。
+7. 在 app 容器运行 `php artisan migrate`、`php artisan test` 和 `npm run build`。
 
 VS Code 使用 `.devcontainer/compose.devcontainer.yaml` 复用这个本地镜像，不会在每次打开容器时重新查询所有基础镜像。该覆盖文件设置了 `pull_policy: never`，因此本地镜像不存在时会明确失败，不会从远端误拉同名镜像。
 
@@ -69,7 +70,7 @@ Codex CLI 只把程序安装进镜像，不包含登录信息。首次在容器�
 
 ## Git 身份
 
-仓库已经初始化为 `main`，但尚未设置作者，也没有创建提交。在确定本人控制的 Git 身份前，不应提交。
+仓库使用 `main` 分支。提交前应确认作者身份仍然来自本仓库配置，避免误用其他项目的全局身份。
 
 查看最终生效来源：
 
@@ -87,6 +88,6 @@ git config --local user.email "你本人控制并已验证的邮箱或 noreply �
 
 ## 当前版本边界
 
-- 已做：Git 初始化、Dev Container、PHP/Node/Composer/Codex 工具链、MySQL、Mailpit、基础规则和冒烟测试。
-- 未做：Laravel 脚手架、数据库 Migration、公开站、后台、测试业务、CI、VPS 部署。
+- 已做：开发底座、Laravel 13 官方 Vue Starter Kit、MySQL/Mailpit 配置、初始 Migration、PHPUnit 和前端构建验证。
+- 未做：精密刀具业务模型、公开 Blade 页面、后台业务功能、CI、VPS 部署。
 - Redis 暂不加入；出现真实队列或缓存需求时再决策。

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+workspace="/workspaces/nihonreach"
+cd "${workspace}"
+
 printf '== Toolchain ==\n'
 php --version | head -n 1
 composer --version
@@ -10,7 +13,7 @@ git --version
 codex --version
 
 printf '\n== Required PHP extensions ==\n'
-for extension in bcmath curl mbstring pcntl pdo_mysql; do
+for extension in bcmath curl mbstring pcntl pdo_mysql pdo_sqlite sqlite3; do
     php -r "exit(extension_loaded('${extension}') ? 0 : 1);"
     printf '%s: ok\n' "${extension}"
 done
@@ -21,19 +24,11 @@ printf 'Zend OPcache: ok\n'
 printf '\n== MySQL connection ==\n'
 php <<'PHP'
 <?php
-
-$dsn = sprintf(
-    'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-    getenv('DB_HOST'),
-    getenv('DB_PORT'),
-    getenv('DB_DATABASE'),
-);
-
-$pdo = new PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'), [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
-
-echo 'MySQL ', $pdo->query('SELECT VERSION()')->fetchColumn(), ": ok\n";
+require 'vendor/autoload.php';
+$app = require 'bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$version = Illuminate\Support\Facades\DB::selectOne('SELECT VERSION() AS version')->version;
+echo "MySQL {$version}: ok\n";
 PHP
 
 printf '\n== Mailpit connection ==\n'

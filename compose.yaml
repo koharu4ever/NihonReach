@@ -1,83 +1,69 @@
 name: nihonreach
 
 services:
-  app:
-    image: nihonreach-app:dev
-    build:
-      context: .
-      dockerfile: .devcontainer/Dockerfile
-      args:
-        CODEX_VERSION: "0.151.0"
-        DEBIAN_MIRROR: "https://mirrors.ustc.edu.cn"
-    init: true
-    command: sleep infinity
-    working_dir: /workspaces/nihonreach
-    volumes:
-      - .:/workspaces/nihonreach:cached
-      - composer-cache:/home/vscode/.composer/cache
-      - npm-cache:/home/vscode/.npm
-      - codex-state:/home/vscode/.codex
-    environment:
-      APP_ENV: local
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: "3306"
-      DB_DATABASE: nihonreach
-      DB_USERNAME: nihonreach
-      DB_PASSWORD: "${NIHONREACH_DB_PASSWORD:?Copy .env.example to .env and set NIHONREACH_DB_PASSWORD}"
-      MAIL_MAILER: smtp
-      MAIL_HOST: mailpit
-      MAIL_PORT: "1025"
-      MAIL_ENCRYPTION: ""
-      MAIL_FROM_ADDRESS: demo@nihonreach.invalid
-      MAIL_FROM_NAME: NihonReach Demo
-    depends_on:
-      mysql:
-        condition: service_healthy
-      mailpit:
-        condition: service_healthy
+    app:
+        image: nihonreach-app:dev
+        build:
+            context: .
+            dockerfile: .devcontainer/Dockerfile
+            args:
+                CODEX_VERSION: '0.151.0'
+                DEBIAN_MIRROR: 'https://mirrors.ustc.edu.cn'
+        init: true
+        command: sleep infinity
+        working_dir: /workspaces/nihonreach
+        volumes:
+            - .:/workspaces/nihonreach:cached
+            - composer-cache:/home/vscode/.composer/cache
+            - npm-cache:/home/vscode/.npm
+            - codex-state:/home/vscode/.codex
+        depends_on:
+            mysql:
+                condition: service_healthy
+            mailpit:
+                condition: service_healthy
 
-  mysql:
-    image: mysql:8.4.11
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: nihonreach
-      MYSQL_USER: nihonreach
-      MYSQL_PASSWORD: "${NIHONREACH_DB_PASSWORD:?Copy .env.example to .env and set NIHONREACH_DB_PASSWORD}"
-      MYSQL_ROOT_PASSWORD: "${NIHONREACH_DB_ROOT_PASSWORD:?Copy .env.example to .env and set NIHONREACH_DB_ROOT_PASSWORD}"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    expose:
-      - "3306"
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - >-
-          MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP
-          -h 127.0.0.1 -u "$${MYSQL_USER}" "$${MYSQL_DATABASE}"
-          -Nse 'SELECT 1' >/dev/null 2>&1
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 40s
+    mysql:
+        image: mysql:8.4.11
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: nihonreach
+            MYSQL_USER: nihonreach
+            MYSQL_PASSWORD: '${NIHONREACH_DB_PASSWORD:?Copy .env.example to .env and set NIHONREACH_DB_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${NIHONREACH_DB_ROOT_PASSWORD:?Copy .env.example to .env and set NIHONREACH_DB_ROOT_PASSWORD}'
+        volumes:
+            - mysql-data:/var/lib/mysql
+        expose:
+            - '3306'
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - >-
+                    MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP
+                    -h 127.0.0.1 -u "$${MYSQL_USER}" "$${MYSQL_DATABASE}"
+                    -Nse 'SELECT 1' >/dev/null 2>&1
+            interval: 5s
+            timeout: 5s
+            retries: 20
+            start_period: 40s
 
-  mailpit:
-    image: axllent/mailpit:v1.30.4
-    restart: unless-stopped
-    environment:
-      MP_MAX_MESSAGES: "500"
-    expose:
-      - "1025"
-      - "8025"
-    healthcheck:
-      test: ["CMD", "/mailpit", "readyz"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+    mailpit:
+        image: axllent/mailpit:v1.30.4
+        restart: unless-stopped
+        environment:
+            MP_MAX_MESSAGES: '500'
+        expose:
+            - '1025'
+            - '8025'
+        healthcheck:
+            test: ['CMD', '/mailpit', 'readyz']
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 10s
 
 volumes:
-  composer-cache:
-  npm-cache:
-  codex-state:
-  mysql-data:
+    composer-cache:
+    npm-cache:
+    codex-state:
+    mysql-data:

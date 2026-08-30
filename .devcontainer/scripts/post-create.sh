@@ -12,6 +12,10 @@ if [[ -f composer.json ]]; then
     composer install --no-interaction
 fi
 
+if [[ -f artisan && -f .env ]] && ! grep -Eq '^APP_KEY=base64:' .env; then
+    php artisan key:generate --no-interaction
+fi
+
 if [[ -f package-lock.json ]]; then
     npm ci
 fi
