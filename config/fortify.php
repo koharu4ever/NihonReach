@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'locale:zh'],
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,6 @@ return [
     */
 
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

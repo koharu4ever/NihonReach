@@ -18,3 +18,24 @@ public/build
 .idea
 .vscode
 *.log
+
+# Local materials and generated development state never enter a build context.
+docs/private
+.agents
+.claude
+.cursor
+.junie
+.devcontainer
+storage
+bootstrap/cache
+bootstrap/ssr
+public/hot
+public/storage
+public/fonts-manifest.dev.json
+resources/js/actions
+resources/js/routes
+resources/js/wayfinder
+.phpunit.cache
+.phpunit.result.cache
+database/*.sqlite
+database/*.sqlite-*

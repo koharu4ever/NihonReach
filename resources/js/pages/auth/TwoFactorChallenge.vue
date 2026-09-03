@@ -18,18 +18,16 @@ const code = ref<string>('');
 const authConfigContent = computed<TwoFactorConfigContent>(() => {
     if (showRecoveryInput.value) {
         return {
-            title: 'Recovery code',
-            description:
-                'Please confirm access to your account by entering one of your emergency recovery codes.',
-            buttonText: 'login using an authentication code',
+            title: '恢复码',
+            description: '请输入一个紧急恢复码以确认您有权访问此账户。',
+            buttonText: '改用身份验证器代码登录',
         };
     }
 
     return {
-        title: 'Authentication code',
-        description:
-            'Enter the authentication code provided by your authenticator application.',
-        buttonText: 'login using a recovery code',
+        title: '身份验证器代码',
+        description: '请输入身份验证器应用提供的验证码。',
+        buttonText: '改用恢复码登录',
     };
 });
 
@@ -48,7 +46,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
 </script>
 
 <template>
-    <Head title="Two-factor authentication" />
+    <Head title="双重身份验证" />
 
     <div class="space-y-6">
         <template v-if="!showRecoveryInput">
@@ -83,10 +81,10 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                     <InputError :message="errors.code" />
                 </div>
                 <Button type="submit" class="w-full" :disabled="processing"
-                    >Continue</Button
+                    >继续</Button
                 >
                 <div class="text-muted-foreground text-center text-sm">
-                    <span>or you can </span>
+                    <span>或者 </span>
                     <button
                         type="button"
                         class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
@@ -108,17 +106,17 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                 <Input
                     name="recovery_code"
                     type="text"
-                    placeholder="Enter recovery code"
+                    placeholder="请输入恢复码"
                     :autofocus="showRecoveryInput"
                     required
                 />
                 <InputError :message="errors.recovery_code" />
                 <Button type="submit" class="w-full" :disabled="processing"
-                    >Continue</Button
+                    >继续</Button
                 >
 
                 <div class="text-muted-foreground text-center text-sm">
-                    <span>or you can </span>
+                    <span>或者 </span>
                     <button
                         type="button"
                         class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
