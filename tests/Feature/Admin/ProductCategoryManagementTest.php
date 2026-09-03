@@ -23,6 +23,34 @@ class ProductCategoryManagementTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_non_admin_write_requests_cannot_change_categories_or_translations(): void
+    {
+        $user = User::factory()->create();
+        $category = ProductCategory::factory()->create();
+        $payload = $this->validCategoryData();
+        $translation = $category->translations()->create([
+            'locale' => 'zh',
+            ...$payload['translations']['zh'],
+        ]);
+        $originalCategory = $category->fresh()->getAttributes();
+        $originalTranslation = $translation->fresh()->getAttributes();
+        $this->actingAs($user);
+
+        foreach (['post', 'put', 'patch', 'delete'] as $method) {
+            $url = match ($method) {
+                'post' => route('admin.categories.store'),
+                'delete' => route('admin.categories.destroy', $category),
+                default => route('admin.categories.update', $category),
+            };
+
+            $this->{$method}($url, $payload)->assertForbidden();
+            $this->assertDatabaseCount('product_categories', 1);
+            $this->assertDatabaseCount('product_category_translations', 1);
+            $this->assertSame($originalCategory, $category->fresh()->getAttributes());
+            $this->assertSame($originalTranslation, $translation->fresh()->getAttributes());
+        }
+    }
+
     public function test_admin_can_view_categories_with_product_counts(): void
     {
         $admin = User::factory()->admin()->create();

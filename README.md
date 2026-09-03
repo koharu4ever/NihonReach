@@ -2,6 +2,14 @@
 
 NihonReach 是面向求职展示的精密切削工具 B2B Portfolio Demo，不是已商业运营的企业网站。项目已形成“公开产品浏览 → 提交询盘 → 管理员查看与更新状态”的完整演示闭环；所有企业、产品、规格和经营场景均为原创 Demo 数据。
 
+## 在线演示与阅读入口
+
+- [中文 Demo](https://nihonreach.kral-koharu.com/zh) · [日文 Demo](https://nihonreach.kral-koharu.com/)
+- 技术栈：Laravel 13、Blade、Inertia 3、Vue 3、TypeScript、MySQL 8.4；Docker 多阶段镜像通过 Coolify 部署到个人 VPS，Cloudflare 管理 DNS。
+- 部署状态：已完成首次部署、数据库迁移与 Demo 数据初始化，并由项目维护者完成人工功能验收。这是公开作品集演示，不代表商业运营、可用性承诺或备份恢复已验收。
+- 管理后台不提供公开共享的可写账号；面试时可由维护者演示，或按下文启动本地环境体验。
+- 建议先读 [业务路由](routes/web.php)、[产品管理与双语保存](app/Http/Controllers/Admin/ProductController.php)、[询盘验证](app/Http/Requests/Site/InquiryRequest.php) 和 [询盘测试](tests/Feature/Site/InquirySubmissionTest.php)。
+
 ## 已完成的功能
 
 - 公开站：Blade 首页、产品分类筛选、分页目录、产品详情、关于页和询盘表单；支持日文与中文切换。
@@ -22,7 +30,7 @@ NihonReach 是面向求职展示的精密切削工具 B2B Portfolio Demo，不�
                         └─ closed 时记录 handled_at；重新打开时清空
 ```
 
-公开提交限制为每分钟 5 次。Demo 不发送真实业务邮件，也不承诺实际销售回复；表单内容只用于本地功能演示。
+公开提交限制为每分钟 5 次。Demo 不发送真实业务邮件，也不承诺实际销售回复。在线表单会将内容保存到演示数据库，请仅填写虚构测试信息，不要提交真实联系方式或商业资料。
 
 ## Demo 管理员
 
@@ -112,7 +120,7 @@ docker compose down
 
 ## 本地配置边界
 
-数据库口令只保存在本机、被 Git 忽略的 `.env` 中，不写入 `compose.yaml`、镜像或 Git 历史。MySQL 端口未发布到 Windows；这些开发值也不得复制到 VPS，生产环境以后使用独立 Secret。
+开发数据库口令只保存在本机、被 Git 忽略的 `.env` 中，不写入 `compose.yaml`、镜像或 Git 历史。MySQL 端口未发布到 Windows；这些开发值不得复制到 VPS，生产环境通过 Coolify 注入独立 Secret。
 
 Codex CLI 只把程序安装进镜像，不包含登录信息。首次在容器中运行 `codex` 时再交互登录；状态保存在 Docker 命名卷，不进入 Git。安装与登录方式参考 [OpenAI 官方 Codex CLI 文档](https://learn.chatgpt.com/docs/codex/cli)。
 
@@ -136,8 +144,8 @@ git config --local user.email "你本人控制并已验证的邮箱或 noreply �
 
 ## 当前版本边界
 
-- 已做：本地开发环境、原创工业视觉、中日文公开产品站、中文管理后台、双语分类/产品 CRUD、管理员权限、询盘闭环、Demo Seeder、自动化测试和静态检查。
-- 明确未做：VPS 部署、生产邮件、对象存储、独立 API、支付、Redis、微服务和真实客户运营。
+- 已做：本地开发环境、原创工业视觉、中日文公开产品站、中文管理后台、双语分类/产品 CRUD、管理员权限、询盘闭环、Demo Seeder、自动化测试和静态检查，以及通过 Coolify 部署到个人 VPS。
+- 明确未做：生产邮件、对象存储、独立 API、支付、Redis、微服务和真实客户运营。备份恢复、高可用和负载能力没有验收结论。
 - 本阶段使用数据库 Session/Cache/Queue 配置，但没有引入异步业务队列；Mailpit 只用于开发邮件捕获。
 
 ## 本地验收
@@ -149,15 +157,26 @@ php artisan migrate --seed
 composer ci:check
 ```
 
-`composer ci:check` 会依次执行前端格式检查、Vue/TypeScript 类型检查、生产构建、Pint、PHPStan 和完整 PHPUnit 测试。
+`composer ci:check` 会先生成被 Git 忽略的 Wayfinder 路由和表单类型，再依次执行前端格式/lint 检查、Vue/TypeScript 类型检查、生产构建、Pint、PHPStan 和完整 PHPUnit 测试。测试使用 `phpunit.xml` 强制指定的 SQLite 内存库，不清空开发 MySQL。
+
+## 持续集成（CI）
+
+[CI 工作流](.github/workflows/ci.yml) 在 PR、推送到 `main` 和手动触发时运行，在独立的 GitHub 托管环境中安装锁定依赖并执行 `composer ci:check`。全新检出也会生成 Wayfinder 类型，不依赖开发机已有的构建文件。
+
+- GitHub Token 仅有源码读取权限，检出后不保留 Git 凭据；第三方 Action 固定到完整提交 SHA。
+- 不配置 VPS、Coolify、数据库或邮件 Secret；临时 `APP_KEY` 在当前任务生成，不输出其值。测试使用内存数据库、内存缓存与不发送邮件的驱动。
+- 不自动格式化、提交代码或部署，不上传 `.env`、日志和构建 artifact。
+- CI 配置入库不等于 CI 已运行通过；远端结果以 [Actions](https://github.com/koharu4ever/NihonReach/actions) 中对应提交的记录为准。工作流也不等于已设置分支保护，合并前应确认 `Quality checks` 通过。
+
+CI 覆盖语言切换参数边界、普通用户写入拒绝与数据库不变、询盘第六次提交的限流，以及原有权限和业务测试。它不替代真实 MySQL、浏览器交互、生产镜像和备份恢复验收。
 
 ## 求职展示与学习记录
 
-### Coolify 部署准备
+### Coolify 部署与运维边界
 
 根目录 `Dockerfile` 是独立的 PHP + Apache 生产镜像，内部端口 `8080`；开发环境仍使用 `.devcontainer/`，两者不要混用。运行配置模板见 `docker/production/coolify.env.example`，分步操作与人工确认点见 [Coolify 部署说明](docs/coolify-deployment.md)。
 
-本地镜像验收可执行 `docker build -t nihonreach:production-local .` 和 `./scripts/Test-Production.ps1`（PowerShell 7）。脚本只使用独立临时容器与合成数据，不操作开发 MySQL。生产 Dockerfile 的存在不代表已经上线；首次迁移、管理员创建、DNS/TLS 与备份恢复仍需人工验收。
+本地镜像验收可执行 `docker build -t nihonreach:production-local .` 和 `./scripts/Test-Production.ps1`（PowerShell 7）。脚本只使用独立临时容器与合成数据，不操作开发 MySQL。当前 Demo 已完成首次部署；迁移、管理员管理、后续 DNS/TLS 检查及备份恢复仍是人工运维事项，不能仅凭 `/up` 健康检查判断全部业务正常。
 
 实现拆解、关键 Diff、验证方式、已学习内容和面试时的如实表达，见 [Portfolio 实现与验收说明](docs/portfolio-implementation.md)。
 

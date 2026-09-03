@@ -93,6 +93,28 @@ class InquirySubmissionTest extends TestCase
         ]);
     }
 
+    #[DataProvider('locales')]
+    public function test_inquiry_rate_limit_rejects_sixth_submission_without_saving(string $prefix): void
+    {
+        $payload = $this->validPayload($this->publicProduct());
+        $this->withServerVariables(['REMOTE_ADDR' => '192.0.2.50']);
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->post(route($prefix.'inquiries.store'), $payload)
+                ->assertRedirect(route($prefix.'inquiries.thanks'));
+        }
+
+        $this->post(route($prefix.'inquiries.store'), $payload)
+            ->assertStatus(429)
+            ->assertHeader('Retry-After');
+        $this->assertDatabaseCount('inquiries', 5);
+
+        $this->travel(61)->seconds();
+        $this->post(route($prefix.'inquiries.store'), $payload)
+            ->assertRedirect(route($prefix.'inquiries.thanks'));
+        $this->assertDatabaseCount('inquiries', 6);
+    }
+
     public function test_required_fields_and_privacy_consent_are_validated(): void
     {
         $response = $this->from(route('inquiries.create'))->post(route('inquiries.store'), []);
