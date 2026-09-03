@@ -17,10 +17,29 @@ class PublicSite
             ? substr($currentName, 3)
             : $currentName;
 
-        $parameters = array_merge(
-            $route?->parameters() ?? [],
-            request()->query(),
-        );
+        $parameters = $route?->parameters() ?? [];
+        $queryKeys = match ($baseName) {
+            'products.index' => ['category', 'page'],
+            'inquiries.create' => ['product'],
+            default => [],
+        };
+
+        // Only carry page-specific scalar query values; route parameters always win.
+        foreach ($queryKeys as $key) {
+            $value = request()->query($key);
+
+            if (! is_string($value) || trim($value) === '') {
+                continue;
+            }
+
+            if ($key === 'page' && filter_var($value, FILTER_VALIDATE_INT, [
+                'options' => ['min_range' => 1],
+            ]) === false) {
+                continue;
+            }
+
+            $parameters += [$key => trim($value)];
+        }
 
         return route(self::routeName($baseName, $locale), $parameters);
     }

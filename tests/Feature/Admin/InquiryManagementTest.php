@@ -24,6 +24,22 @@ class InquiryManagementTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_non_admin_users_cannot_update_inquiry_status(): void
+    {
+        $inquiry = $this->inquiry();
+        $original = $inquiry->fresh()->getAttributes();
+        $this->actingAs(User::factory()->create());
+
+        foreach (['put', 'patch'] as $method) {
+            $this->{$method}(route('admin.inquiries.update', $inquiry), [
+                'status' => Inquiry::STATUS_CLOSED,
+            ])->assertForbidden();
+
+            $this->assertDatabaseCount('inquiries', 1);
+            $this->assertSame($original, $inquiry->fresh()->getAttributes());
+        }
+    }
+
     public function test_admin_can_view_inquiry_list(): void
     {
         $admin = User::factory()->admin()->create();
