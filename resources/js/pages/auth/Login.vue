@@ -2,32 +2,28 @@
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
-import PasskeyVerify from '@/components/PasskeyVerify.vue';
 
 defineOptions({
     layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
+        title: '管理员登录',
+        description: '请输入管理员邮箱和密码进入后台。',
     },
 });
 
 defineProps<{
     status?: string;
-    canResetPassword: boolean;
+    canResetPassword?: boolean;
 }>();
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="管理员登录" />
 
     <div
         v-if="status"
@@ -35,8 +31,6 @@ defineProps<{
     >
         {{ status }}
     </div>
-
-    <PasskeyVerify />
 
     <Form
         v-bind="store.form()"
@@ -46,7 +40,7 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">电子邮箱</Label>
                 <Input
                     id="email"
                     type="email"
@@ -55,22 +49,14 @@ defineProps<{
                     autofocus
                     :tabindex="1"
                     autocomplete="email"
-                    placeholder="email@example.com"
+                    placeholder="demo-admin@example.test"
                 />
                 <InputError :message="errors.email" />
             </div>
 
             <div class="grid gap-2">
                 <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
-                    <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
-                        class="text-sm"
-                        :tabindex="5"
-                    >
-                        Forgot your password?
-                    </TextLink>
+                    <Label for="password">密码</Label>
                 </div>
                 <PasswordInput
                     id="password"
@@ -78,7 +64,7 @@ defineProps<{
                     required
                     :tabindex="2"
                     autocomplete="current-password"
-                    placeholder="Password"
+                    placeholder="请输入密码"
                 />
                 <InputError :message="errors.password" />
             </div>
@@ -86,7 +72,7 @@ defineProps<{
             <div class="flex items-center justify-between">
                 <Label for="remember" class="flex items-center space-x-3">
                     <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span>Remember me</span>
+                    <span>保持登录状态</span>
                 </Label>
             </div>
 
@@ -98,13 +84,8 @@ defineProps<{
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Log in
+                登录
             </Button>
-        </div>
-
-        <div class="text-muted-foreground text-center text-sm">
-            Don't have an account?
-            <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
         </div>
     </Form>
 </template>

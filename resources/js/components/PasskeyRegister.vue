@@ -29,7 +29,7 @@ const getDefaultPasskeyName = () => {
         { pattern: /Windows/, name: 'Windows' },
     ].find(({ pattern }) => pattern.test(ua))?.name;
 
-    return [browser, os].filter(Boolean).join(' on ') || '';
+    return [browser, os].filter(Boolean).join(' / ') || '';
 };
 
 const name = ref(getDefaultPasskeyName());
@@ -61,11 +61,11 @@ const handleCancel = () => {
 
 <template>
     <div v-if="!isSupported" class="text-muted-foreground text-sm">
-        Passkeys are not supported in this browser.
+        当前浏览器不支持通行密钥。
     </div>
 
     <Button v-else-if="!showForm" variant="outline" @click="showForm = true">
-        Add passkey
+        添加通行密钥
     </Button>
 
     <form
@@ -74,17 +74,17 @@ const handleCancel = () => {
         class="border-border bg-muted/50 space-y-4 rounded-lg border p-4"
     >
         <div class="grid gap-2">
-            <Label for="passkey-name">Passkey name</Label>
+            <Label for="passkey-name">通行密钥名称</Label>
             <Input
                 id="passkey-name"
                 type="text"
                 v-model="name"
-                placeholder="e.g., MacBook Pro, iPhone"
+                placeholder="例如：办公电脑、iPhone"
                 class="border-foreground/20 mt-1 block w-full"
                 autofocus
             />
             <p class="text-muted-foreground text-xs">
-                A name helps you identify this passkey later.
+                设置名称便于日后识别此通行密钥。
             </p>
         </div>
 
@@ -92,10 +92,10 @@ const handleCancel = () => {
 
         <div class="flex gap-2">
             <Button type="submit" :disabled="isLoading || !name.trim()">
-                {{ isLoading ? 'Registering...' : 'Register passkey' }}
+                {{ isLoading ? '正在添加…' : '添加通行密钥' }}
             </Button>
             <Button type="button" variant="ghost" @click="handleCancel">
-                Cancel
+                取消
             </Button>
         </div>
     </form>

@@ -4,6 +4,8 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.vue';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -168,5 +170,75 @@
     }
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@layer components {
+    .public-site {
+        --public-accent: #b91c1c;
+        --public-ink: #111827;
+        --public-paper: #f5f5f3;
+        background: var(--public-paper);
+        color: var(--public-ink);
+        font-family:
+            'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo,
+            'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+        font-feature-settings: 'palt' 1;
+    }
+
+    .public-site .industrial-grid {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.035) 1px,
+                transparent 1px
+            ),
+            radial-gradient(
+                circle at 70% 25%,
+                rgba(185, 28, 28, 0.2),
+                transparent 32%
+            );
+        background-size:
+            28px 28px,
+            28px 28px,
+            auto;
+    }
+
+    .public-site .metal-sheen {
+        background-image: linear-gradient(
+            120deg,
+            #f8fafc 0%,
+            #e5e7eb 48%,
+            #f8fafc 100%
+        );
+    }
+
+    .public-site details > summary::-webkit-details-marker {
+        display: none;
+    }
+}
+
+@layer base {
+    .public-site
+        :where(a, button, input, select, textarea, summary):focus-visible {
+        outline: 2px solid #b91c1c;
+        outline-offset: 3px;
+    }
+
+    .public-site ::selection {
+        background: #fecaca;
+        color: #450a0a;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-site *,
+    .public-site *::before,
+    .public-site *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }

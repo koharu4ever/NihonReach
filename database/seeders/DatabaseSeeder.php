@@ -15,11 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (app()->environment(['local', 'testing'])) {
+            $admin = User::query()->firstOrNew([
+                'email' => 'demo-admin@example.test',
+            ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            $admin->forceFill([
+                'name' => 'Demo Admin',
+                'email_verified_at' => now(),
+                'password' => 'password',
+                'is_admin' => true,
+            ])->save();
+        }
+
+        $this->call([
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

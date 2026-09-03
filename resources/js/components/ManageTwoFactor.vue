@@ -31,8 +31,8 @@ onUnmounted(() => clearTwoFactorAuthData());
     <div v-if="canManageTwoFactor" class="space-y-6">
         <Heading
             variant="small"
-            title="Two-factor authentication"
-            description="Manage your two-factor authentication settings"
+            title="双重身份验证"
+            description="管理账户的双重身份验证设置"
         />
 
         <div
@@ -40,14 +40,13 @@ onUnmounted(() => clearTwoFactorAuthData());
             class="flex flex-col items-start justify-start space-y-4"
         >
             <p class="text-muted-foreground text-sm">
-                When you enable two-factor authentication, you will be prompted
-                for a secure pin during login. This pin can be retrieved from a
-                TOTP-supported application on your phone.
+                启用双重身份验证后，登录时还需要输入安全验证码。验证码可从手机上的
+                TOTP 身份验证器应用中获取。
             </p>
 
             <div>
                 <Button v-if="hasSetupData" @click="showSetupModal = true">
-                    <ShieldCheck />Continue setup
+                    <ShieldCheck />继续设置
                 </Button>
                 <Form
                     v-else
@@ -56,7 +55,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                     #default="{ processing }"
                 >
                     <Button type="submit" :disabled="processing">
-                        Enable 2FA
+                        启用 2FA
                     </Button>
                 </Form>
             </div>
@@ -64,9 +63,8 @@ onUnmounted(() => clearTwoFactorAuthData());
 
         <div v-else class="flex flex-col items-start justify-start space-y-4">
             <p class="text-muted-foreground text-sm">
-                You will be prompted for a secure, random pin during login,
-                which you can retrieve from the TOTP-supported application on
-                your phone.
+                登录时将要求输入安全验证码，您可以从手机上的 TOTP
+                身份验证器应用中获取。
             </p>
 
             <div class="relative inline">
@@ -76,7 +74,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                         type="submit"
                         :disabled="processing"
                     >
-                        Disable 2FA
+                        停用 2FA
                     </Button>
                 </Form>
             </div>

@@ -11,8 +11,8 @@ import { email } from '@/routes/password';
 
 defineOptions({
     layout: {
-        title: 'Forgot password',
-        description: 'Enter your email to receive a password reset link',
+        title: '忘记密码',
+        description: '输入电子邮箱以接收密码重置链接',
     },
 });
 
@@ -22,7 +22,7 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="Forgot password" />
+    <Head title="忘记密码" />
 
     <div
         v-if="status"
@@ -34,7 +34,7 @@ defineProps<{
     <div class="space-y-6">
         <Form v-bind="email.form()" v-slot="{ errors, processing }">
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">电子邮箱</Label>
                 <Input
                     id="email"
                     type="email"
@@ -53,14 +53,14 @@ defineProps<{
                     data-test="email-password-reset-link-button"
                 >
                     <Spinner v-if="processing" />
-                    Email password reset link
+                    发送密码重置链接
                 </Button>
             </div>
         </Form>
 
         <div class="text-muted-foreground space-x-1 text-center text-sm">
-            <span>Or, return to</span>
-            <TextLink :href="login()">log in</TextLink>
+            <span>或者返回</span>
+            <TextLink :href="login()">登录页面</TextLink>
         </div>
     </div>
 </template>

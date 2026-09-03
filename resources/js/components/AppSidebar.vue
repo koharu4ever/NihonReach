@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from '@lucide/vue';
+import { Boxes, Globe2, LayoutGrid, MessagesSquare, Tags } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -14,27 +14,40 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { index as categoryIndex } from '@/routes/admin/categories';
+import { index as inquiryIndex } from '@/routes/admin/inquiries';
+import { index as productIndex } from '@/routes/admin/products';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: '仪表盘',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: '产品管理',
+        href: productIndex(),
+        icon: Boxes,
+    },
+    {
+        title: '询盘管理',
+        href: inquiryIndex(),
+        icon: MessagesSquare,
+    },
+    {
+        title: '产品分类',
+        href: categoryIndex(),
+        icon: Tags,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: '前台网站',
+        href: '/zh',
+        icon: Globe2,
     },
 ];
 </script>

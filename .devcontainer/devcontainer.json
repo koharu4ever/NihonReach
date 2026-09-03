@@ -22,6 +22,9 @@
             "onAutoForward": "notify"
         }
     },
+    "otherPortsAttributes": {
+        "onAutoForward": "ignore"
+    },
     "customizations": {
         "vscode": {
             "extensions": [
@@ -35,7 +38,9 @@
             "settings": {
                 "editor.formatOnSave": true,
                 "files.eol": "\n",
-                "terminal.integrated.defaultProfile.linux": "bash"
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "remote.autoForwardPorts": false,
+                "remote.restoreForwardedPorts": false
             }
         }
     }

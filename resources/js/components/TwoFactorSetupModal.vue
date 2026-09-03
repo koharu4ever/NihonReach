@@ -46,26 +46,25 @@ const pinInputContainerRef = useTemplateRef('pinInputContainerRef');
 const modalConfig = computed<TwoFactorConfigContent>(() => {
     if (props.twoFactorEnabled) {
         return {
-            title: 'Two-factor authentication enabled',
+            title: '双重身份验证已启用',
             description:
-                'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
-            buttonText: 'Close',
+                '双重身份验证现已启用。请用身份验证器应用扫描二维码或输入设置密钥。',
+            buttonText: '关闭',
         };
     }
 
     if (showVerificationStep.value) {
         return {
-            title: 'Verify authentication code',
-            description: 'Enter the 6-digit code from your authenticator app',
-            buttonText: 'Continue',
+            title: '验证身份验证器代码',
+            description: '请输入身份验证器应用中的 6 位验证码',
+            buttonText: '继续',
         };
     }
 
     return {
-        title: 'Enable two-factor authentication',
-        description:
-            'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
-        buttonText: 'Continue',
+        title: '启用双重身份验证',
+        description: '要完成设置，请用身份验证器应用扫描二维码或输入设置密钥',
+        buttonText: '继续',
     };
 });
 
@@ -197,7 +196,7 @@ watch(
                                 class="bg-border absolute inset-0 top-1/2 h-px w-full"
                             />
                             <span class="bg-card relative px-2 py-1"
-                                >or, enter the code manually</span
+                                >或者手动输入设置密钥</span
                             >
                         </div>
 
@@ -279,14 +278,14 @@ watch(
                                     @click="showVerificationStep = false"
                                     :disabled="processing"
                                 >
-                                    Back
+                                    返回
                                 </Button>
                                 <Button
                                     type="submit"
                                     class="w-auto flex-1"
                                     :disabled="processing || code.length < 6"
                                 >
-                                    Confirm
+                                    确认
                                 </Button>
                             </div>
                         </div>

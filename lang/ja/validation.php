@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'accepted' => ':attributeを確認してください。',
+    'array' => ':attributeは配列で指定してください。',
+    'boolean' => ':attributeは true または false で指定してください。',
+    'confirmed' => ':attributeの確認が一致しません。',
+    'current_password' => 'パスワードが正しくありません。',
+    'email' => ':attributeには有効なメールアドレスを指定してください。',
+    'exists' => '選択された:attributeは無効です。',
+    'in' => '選択された:attributeは無効です。',
+    'integer' => ':attributeは整数で指定してください。',
+    'max' => [
+        'array' => ':attributeは:max個以下で指定してください。',
+        'numeric' => ':attributeは:max以下で指定してください。',
+        'string' => ':attributeは:max文字以下で入力してください。',
+    ],
+    'min' => [
+        'array' => ':attributeは:min個以上で指定してください。',
+        'numeric' => ':attributeは:min以上で指定してください。',
+        'string' => ':attributeは:min文字以上で入力してください。',
+    ],
+    'required' => ':attributeは必須です。',
+    'string' => ':attributeは文字列で入力してください。',
+    'unique' => ':attributeはすでに使用されています。',
+
+    'attributes' => [
+        'product_id' => '対象製品',
+        'name' => 'お名前',
+        'company' => '会社名',
+        'email' => 'メールアドレス',
+        'phone' => '電話番号',
+        'subject' => '件名',
+        'message' => 'お問い合わせ内容',
+        'privacy' => 'データ保存への同意',
+        'password' => 'パスワード',
+        'status' => '対応状況',
+        'slug' => 'スラッグ',
+        'sku' => 'SKU',
+        'summary' => '概要',
+        'description' => '説明',
+        'image_path' => '画像パス',
+        'specifications' => '仕様',
+        'is_featured' => 'おすすめ設定',
+        'is_active' => '公開設定',
+        'sort_order' => '表示順',
+    ],
+];
