@@ -1,11 +1,16 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "koharu4ever/nihonreach",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "A bilingual B2B product catalog and inquiry management portfolio built with Laravel, Blade, Inertia, Vue and MySQL.",
     "keywords": [
         "laravel",
-        "framework"
+        "vue",
+        "inertia",
+        "typescript",
+        "mysql",
+        "bilingual",
+        "portfolio"
     ],
     "license": "MIT",
     "require": {

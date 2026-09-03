@@ -10,6 +10,33 @@ NihonReach 是面向求职展示的精密切削工具 B2B Portfolio Demo，不�
 - 管理后台不提供公开共享的可写账号；面试时可由维护者演示，或按下文启动本地环境体验。
 - 建议先读 [业务路由](routes/web.php)、[产品管理与双语保存](app/Http/Controllers/Admin/ProductController.php)、[询盘验证](app/Http/Requests/Site/InquiryRequest.php) 和 [询盘测试](tests/Feature/Site/InquirySubmissionTest.php)。
 
+## 界面速览
+
+以下为本地运行中的真实界面截图，使用独立临时数据库和虚构数据；不是客户案例，也不包含生产后台或真实询盘。点击图片可查看原图。
+
+| 日文首页 · Blade 公开站                                                               | 中文产品目录 · 产品卡片                                                                       |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [![日文首页与 Demo 声明](docs/screenshots/ja-home.png)](docs/screenshots/ja-home.png) | [![中文产品目录与演示产品](docs/screenshots/zh-catalog.png)](docs/screenshots/zh-catalog.png) |
+
+| 后台产品表单 · 中日文维护                                                                             | 询盘详情 · 状态更新                                                                                     |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [![中文后台双语产品编辑表单](docs/screenshots/admin-product.png)](docs/screenshots/admin-product.png) | [![虚构询盘详情与处理状态表单](docs/screenshots/admin-inquiry.png)](docs/screenshots/admin-inquiry.png) |
+
+截图范围及数据说明见 [截图说明](docs/screenshots/README.md)。
+
+## 架构速览
+
+```mermaid
+flowchart LR
+    Visitor[访客] --> Public[公开端：Laravel 路由 + Blade]
+    Admin[管理员] --> Backend[后台：Laravel 路由 + Inertia / Vue]
+    Public --> Shared[共享服务端：输入验证 / 授权 / Eloquent]
+    Backend --> Shared
+    Shared --> DB[(MySQL)]
+```
+
+这是同一个 Laravel 单体应用的两个界面入口，不是两个独立服务。公开端以服务器渲染的目录为主，后台用 Vue 处理交互表单；输入验证、管理员授权与数据保存始终由 Laravel 执行，不依赖前端隐藏按钮来保护数据。
+
 ## 已完成的功能
 
 - 公开站：Blade 首页、产品分类筛选、分页目录、产品详情、关于页和询盘表单；支持日文与中文切换。
@@ -169,6 +196,14 @@ composer ci:check
 - CI 配置入库不等于 CI 已运行通过；远端结果以 [Actions](https://github.com/koharu4ever/NihonReach/actions) 中对应提交的记录为准。工作流也不等于已设置分支保护，合并前应确认 `Quality checks` 通过。
 
 CI 覆盖语言切换参数边界、普通用户写入拒绝与数据库不变、询盘第六次提交的限流，以及原有权限和业务测试。它不替代真实 MySQL、浏览器交互、生产镜像和备份恢复验收。
+
+About、Topics 和 main 分支保护需要在 GitHub 单独设置，建议值与确认方法见 [仓库展示与分支保护](docs/github-repository-settings.md)；文档入库不代表这些远端设置已启用。
+
+## 许可证与来源
+
+本项目采用 [MIT License](LICENSE)。项目基于 Laravel 官方 Vue Starter Kit 初始化，在其基础上实现双语目录、产品与分类管理、询盘流程及测试；不将官方认证脚手架表述为自研成果。
+
+Laravel、Vue、Inertia、shadcn-vue 等第三方依赖及其附带代码仍保留各自的许可证与声明；根目录 MIT 不替代第三方授权条款。演示产品、规格与品牌不代表真实企业或制造商，也不能作为真实产品选型依据。
 
 ## 求职展示与学习记录
 
